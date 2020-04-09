@@ -19,13 +19,13 @@ io.on('connection', socket => {
         if (error) {
             return callback(error)
         }
+        socket.join(user.room)
+        socket.emit('receive', generateMessage('monkey', 'Welcome!'))
+        socket.broadcast.to(user.room).emit('receive', generateMessage('monkey', `${user.username} has join!`))
         io.to(user.room).emit('roomData', {
             room: user.room,
             users: getUsersInRoom(user.room)
         })
-        socket.join(user.room)
-        socket.emit('receive', generateMessage('monkey', 'Welcome!'))
-        socket.broadcast.to(user.room).emit('receive', generateMessage('monkey', `${user.username} has join!`))
         callback()
     })
     // receive a message from client and send it to another
